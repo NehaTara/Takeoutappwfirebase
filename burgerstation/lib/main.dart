@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:burgerstation/themes/theme_provider.dart';
 
 void main() {
+  
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
