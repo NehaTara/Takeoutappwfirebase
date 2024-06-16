@@ -1,3 +1,4 @@
+import 'package:burgerstation/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import '../components/my_button.dart';
@@ -6,7 +7,7 @@ class RegisterPage extends StatefulWidget {
   
   final void Function()? onTap;
    
-   const RegisterPage({super.key, required this.onTap});
+   const RegisterPage({super.key, required this.onTap, required FirebaseAuthService authService});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();

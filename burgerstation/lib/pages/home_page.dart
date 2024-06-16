@@ -7,6 +7,7 @@ import 'package:burgerstation/components/my_tab_bar.dart';
 import 'package:burgerstation/models/food.dart';
 import 'package:burgerstation/models/restaurant.dart';
 import 'package:burgerstation/pages/food_page.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +18,9 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
 
+  ConnectivityResult? connectivityResult;
   //tab Controller
   late TabController _tabController;
 
@@ -27,12 +29,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.initState();
     _tabController = 
         TabController(length: FoodCategory.values.length, vsync: this);
+    checkConnectivity();
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      setState(() {
+        connectivityResult = result;
+      });
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void checkConnectivity() async {
+    connectivityResult = await Connectivity().checkConnectivity();
+    setState(() {});
   }
 
   // sort out and return a list of food items that belong to a specific category
@@ -51,7 +64,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
-          // get induvidual food
+          // get individual food
           final food = categoryMenu[index];
 
           // return food tile UI
@@ -87,21 +100,33 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   endIndent: 25,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
-
-               // my current location
-               const MyCurrentLocation(),
-
-               // description box
-               const MyDescriptionBox(),
+                if (connectivityResult == ConnectivityResult.none)
+                  Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: Center(
+                      child: Text(
+                        'Connect to the internet to view location and delivery data',
+                        style: TextStyle(
+                          color: Color.fromRGBO(241, 30, 30, 1),
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  )
+                else ...[
+                  const MyCurrentLocation(),
+                  const MyDescriptionBox(),
+                ],
               ],
             ),
           ),
         ],
         body: Consumer<Restaurant>(
-          builder:(context, restaurant, child) => TabBarView(
-          controller: _tabController,
-          children: getFoodInThisCategory(restaurant.menu),
-        ), ),
+          builder: (context, restaurant, child) => TabBarView(
+            controller: _tabController,
+            children: getFoodInThisCategory(restaurant.menu),
+          ),
+        ),
       ),
     );
   }

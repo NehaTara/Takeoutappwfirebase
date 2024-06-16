@@ -1,6 +1,7 @@
-import 'package:burgerstation/pages/login_page.dart';
-import 'package:burgerstation/pages/register_page.dart';
 import 'package:flutter/material.dart';
+import '../pages/login_page.dart';
+import '../pages/register_page.dart';
+import 'auth_service.dart'; 
 
 class LoginOrRegister extends StatefulWidget {
   const LoginOrRegister({super.key});
@@ -10,23 +11,23 @@ class LoginOrRegister extends StatefulWidget {
 }
 
 class _LoginOrRegisterState extends State<LoginOrRegister> {
-
-  //initially show login page
+  // Initially show login page
   bool showLoginPage = true;
-  void togglePages(){
+
+  void togglePages() {
     setState(() {
       showLoginPage = !showLoginPage;
     });
   }
 
- //toggle between login and register page
-
   @override
   Widget build(BuildContext context) {
-    if (showLoginPage){
-      return LoginPage(onTap: togglePages);
+    final authService = FirebaseAuthService();
+
+    if (showLoginPage) {
+      return LoginPage(onTap: togglePages, authService: authService);
     } else {
-      return RegisterPage(onTap: togglePages);
+      return RegisterPage(onTap: togglePages, authService: authService);
     }
   }
 }

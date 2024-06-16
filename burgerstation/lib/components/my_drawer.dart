@@ -1,4 +1,5 @@
 import 'package:burgerstation/components/my_drawer_tile.dart';
+import 'package:burgerstation/pages/about_page.dart';
 import 'package:flutter/material.dart';
 import '../pages/settings_page.dart';
 
@@ -50,7 +51,22 @@ class MyDrawer extends StatelessWidget {
             },
           ),
 
+          MyDrawerTile(
+           text: "A B O U T", 
+           icon: Icons.settings,
+           onTap: () {
+             Navigator.pop(context);
+             Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>  const SettingsPage(),
+                ),
+              );
+            },
+          ),
+
           const Spacer(),
+
 
          // logout list title
          MyDrawerTile(
