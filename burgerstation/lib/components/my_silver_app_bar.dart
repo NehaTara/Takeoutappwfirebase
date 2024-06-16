@@ -33,7 +33,7 @@ class MySilverAppBar extends StatelessWidget {
           icon: const Icon(Icons.shopping_cart_checkout_outlined),
         )
       ],
-      title: const Text("Sunset Diner"),
+      title: const Text("Burger Station"),
       backgroundColor: Theme.of(context).colorScheme.background,
       foregroundColor: Theme.of(context).colorScheme.inversePrimary,
       flexibleSpace: FlexibleSpaceBar(
