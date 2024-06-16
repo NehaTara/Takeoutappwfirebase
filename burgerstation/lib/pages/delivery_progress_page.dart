@@ -1,8 +1,25 @@
+import 'dart:io';
 import 'package:burgerstation/components/my_receipt.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-class DeliveryProgressPage extends StatelessWidget {
-  const DeliveryProgressPage({super.key});
+class DeliveryProgressPage extends StatefulWidget {
+  const DeliveryProgressPage({Key? key}) : super(key: key);
+
+  @override
+  _DeliveryProgressPageState createState() => _DeliveryProgressPageState();
+}
+
+class _DeliveryProgressPageState extends State<DeliveryProgressPage> {
+  XFile? _selectedImage;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? image = await _picker.pickImage(source: source);
+    setState(() {
+      _selectedImage = image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +29,16 @@ class DeliveryProgressPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
       ),
       bottomNavigationBar: _buildBottomNavBar(context),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             MyReceipt(),
+            ElevatedButton(
+              onPressed: () => _showImageSourceActionSheet(context),
+              child: Text('Pick Image'),
+            ),
+            // Display the picked image or provide instructions to take a photo
+            _selectedImage != null ? Image.file(File(_selectedImage!.path)) : Container(),
           ],
         ),
       ),
@@ -47,9 +70,7 @@ class DeliveryProgressPage extends StatelessWidget {
               icon: const Icon(Icons.person),
             ),
           ),
-
           const SizedBox(width: 15),
-
           // Driver details
           Flexible(
             child: Column(
@@ -73,9 +94,7 @@ class DeliveryProgressPage extends StatelessWidget {
               ],
             ),
           ),
-
           const Spacer(),
-
           // Message and Call buttons
           Wrap(
             spacing: 10,
@@ -92,7 +111,6 @@ class DeliveryProgressPage extends StatelessWidget {
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-
               // Call button
               Container(
                 decoration: BoxDecoration(
@@ -109,6 +127,36 @@ class DeliveryProgressPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showImageSourceActionSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Photo Library'),
+                onTap: () {
+                  _pickImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_camera),
+                title: Text('Camera'),
+                onTap: () {
+                  _pickImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
