@@ -31,7 +31,7 @@ class FirebaseAuthService extends AuthService {
       );
       return userCredential.user;
     } catch (e) {
-      rethrow;
+      throw Exception('Failed to register');
     }
   }
 

@@ -27,7 +27,10 @@ class _LoginOrRegisterState extends State<LoginOrRegister> {
     if (showLoginPage) {
       return LoginPage(onTap: togglePages, authService: authService);
     } else {
-      return RegisterPage(onTap: togglePages, authService: authService);
+      return RegisterPage(
+  onTap: togglePages,
+  authService: authService,
+);
     }
   }
 }

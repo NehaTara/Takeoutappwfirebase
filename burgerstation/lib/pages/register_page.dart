@@ -1,110 +1,86 @@
-import 'package:burgerstation/auth/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:burgerstation/auth/auth_service.dart';
+import 'package:burgerstation/components/my_button.dart';
+import 'package:burgerstation/components/my_textfield.dart';
 
-import '../components/my_button.dart';
-import '../components/my_textfield.dart';
 class RegisterPage extends StatefulWidget {
-  
   final void Function()? onTap;
-   
-   const RegisterPage({super.key, required this.onTap, required FirebaseAuthService authService});
+  final AuthService authService;
+
+  const RegisterPage({
+    Key? key,
+    required this.onTap,
+    required this.authService,
+  }) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // text editing controllers
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmpasswordController = 
+  final TextEditingController confirmPasswordController =
       TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //logo
             Icon(
               Icons.lock_open_rounded,
               size: 72,
               color: Theme.of(context).colorScheme.inversePrimary,
             ),
-
-            const SizedBox(height: 25),
-
-            //message, app slogan
+            const SizedBox(height: 10),
             Text(
-              "Let's Create an account for you",
-              style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).colorScheme.inversePrimary,
+                "Register",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).colorScheme.inversePrimary,
                 ),
               ),
-
-              const SizedBox(height: 25),
-              
-            //email textfield
-            MyTextField(
-              controller: emailController, 
-              hintText: "Email", 
-              obscureText: false,
-              ),
-
-            const SizedBox(height: 10),
-
-            //password textfield
-            MyTextField(
-              controller: passwordController, 
-              hintText: "Password", 
-              obscureText: true,
-              ),
-
-            const SizedBox(height: 10),
-
-            //confirm password textfield
-            MyTextField(
-              controller: confirmpasswordController, 
-              hintText: "Confirm password", 
-              obscureText: true,
-              ),
-
-            const SizedBox(height: 10),
-
-            //sign up button
-            MyButton(
-              text: "Sign up",
-              onTap: () {},
-            ), //MyButton
-
             const SizedBox(height: 25),
-
-            //already have an account? Login here
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "already have an account?",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary),
-                  ),
-                const SizedBox (width: 4),
-                GestureDetector(
-                  onTap: widget.onTap,
-                  child: Text(
-                    "Login Now",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ), //Row
+            MyTextField(
+              controller: emailController,
+              hintText: "Email",
+              obscureText: false,
+            ),
+            const SizedBox(height: 10),
+            MyTextField(
+              controller: passwordController,
+              hintText: "Password",
+              obscureText: true,
+            ),
+            const SizedBox(height: 10),
+            MyTextField(
+              controller: confirmPasswordController,
+              hintText: "Confirm Password",
+              obscureText: true,
+            ),
+            const SizedBox(height: 25),
+            MyButton(
+              text: "Register",
+              onTap: () async {
+                if (passwordController.text != confirmPasswordController.text) {
+                  print("Passwords don't match");
+                  return; // Early return if passwords don't match
+                }
+                try {
+                  await widget.authService
+                      .register(emailController.text, passwordController.text);
+                  // Asserting onTap is not null before calling it
+                  widget.onTap!(); // Using! to assert onTap is not null
+                } catch (e) {
+                  print(e);
+                  // Optionally, show an error message to the user
+                }
+              },
+            ),
           ],
         ),
       ),
