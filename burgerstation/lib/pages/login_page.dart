@@ -1,5 +1,4 @@
 import 'package:burgerstation/auth/auth_service.dart';
-import 'package:burgerstation/auth/login_or_register.dart';
 import 'package:burgerstation/components/my_button.dart';
 import 'package:burgerstation/components/my_textfield.dart';
 import 'package:flutter/material.dart';
