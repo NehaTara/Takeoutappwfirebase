@@ -1,5 +1,4 @@
 import 'package:burgerstation/components/my_drawer_tile.dart';
-import 'package:burgerstation/pages/about_page.dart';
 import 'package:flutter/material.dart';
 import '../pages/settings_page.dart';
 
